@@ -1,0 +1,308 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background: url('../img/final-page-background.webp') no-repeat center center fixed;
+    background-size: cover;
+    overflow: hidden;
+    min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+}
+
+.final-center-outer {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 4vw;
+    padding-right: 4vw;
+    box-sizing: border-box;
+}
+
+.final-outer-container {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Remove padding here, handled by .final-center-outer */
+    padding-left: 0;
+    padding-right: 0;
+    box-sizing: border-box;
+}
+
+.final-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.message-box {
+    background: rgba(8, 0, 0, 0.9);
+    padding: 24px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    animation: fadeIn 1s ease forwards;
+    color: rgb(226, 226, 226);
+    font-size: 1rem;
+}
+
+.message-box h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: rgb(226, 226, 226);
+}
+
+.message-box p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: rgb(226, 226, 226);
+}
+
+#msgBtn {
+    padding: 12px 24px;
+    border: none;
+    background-color: #720000;
+    color: rgb(226, 226, 226);
+    font-size: 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+#msgBtn:hover {
+    background-color: #ce0000;
+    transform: scale(1.05);
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Popup Overlay */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(8, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.22s;
+}
+
+.popup.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.popup-center-outer {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 8vw;
+    padding-right: 8vw;
+    box-sizing: border-box;
+}
+
+.popup-content {
+    background: rgba(8, 0, 0, 0.97);
+    border-radius: 20px;
+    padding: 48px 44px 44px 44px;
+    max-width: 420px;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    max-height: 70vh;
+    overflow-y: auto;
+    text-align: justify;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+    transform: translateY(40px) scale(0.98);
+    opacity: 0;
+    transition: transform 0.22s cubic-bezier(.68, -0.55, .27, 1.55), opacity 0.22s;
+    color: rgb(226, 226, 226);
+}
+
+.popup-content p {
+    margin: 0;
+    padding: 0 12px 0 12px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    /* Ensures text doesn't touch the border */
+    word-break: break-word;
+    line-height: 1.6;
+}
+
+/* Custom Scrollbar Styling for popup-content (matches chatAI) */
+.popup-content::-webkit-scrollbar {
+    width: 10px; /* wider for gap effect */
+    background: transparent;
+}
+
+.popup-content::-webkit-scrollbar-thumb {
+    background-color: #c40000;
+    border-radius: 6px;
+    border: 2px solid rgba(8,0,0,0.97); /* creates gap between thumb and edge */
+}
+
+/* For Firefox */
+.popup-content {
+    scrollbar-width: thin;
+    scrollbar-color: #c40000 rgba(8,0,0,0.97);
+    /* Add a little padding so scrollbar doesn't overlap text */
+    padding-right: 6px;
+}
+
+.popup-content p {
+    margin: 0;
+    padding: 0;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    /* Ensures text doesn't touch the border */
+    word-break: break-word;
+    line-height: 1.6;
+}
+
+.popup:not(.hidden) .popup-content {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.close-popup {
+    position: absolute;
+    top: 16px;
+    right: 22px;
+    font-size: 2.2rem;
+    color: #720000;
+    cursor: pointer;
+    transition: color 0.18s, transform 0.18s;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.close-popup:hover {
+    color: #ce0000;
+    transform: scale(1.15);
+}
+
+.final-back-container {
+    position: fixed;
+    top: 24px;
+    left: 32px;
+    right: auto;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    z-index: 10;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-top: 0;
+  text-decoration: none;
+  background-color: rgba(8, 0, 0, 0.70);
+  padding: 7px 13px;
+  border-radius: 10px;
+  transition: background-color 0.3s, transform 0.3s;
+  position: relative;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+  font-weight: 600;
+  color: rgb(226, 226, 226, 1);
+  border: none;
+  font-size: 1rem;
+  animation: fadeSlideIn 0.7s cubic-bezier(.68, -0.55, .27, 1.55);
+}
+
+.back-btn:hover {
+  background-color: rgba(8, 0, 0, 0.7);
+  transform: scale(1.05);
+  color: rgb(226, 226, 226, 0.7);
+}
+
+.message-box,
+.final-outer-container,
+.final-container,
+.final-back-container {
+    animation: fadeSlideIn 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(32px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.background {
+    display: none;
+}
+
+@media (max-width: 700px) {
+    .popup-center-outer {
+        padding-left: 2vw;
+        padding-right: 2vw;
+    }
+
+    .final-outer-container {
+        padding-left: 2vw;
+        padding-right: 2vw;
+    }
+
+    .message-box {
+        max-width: 98vw;
+        padding: 10px;
+        font-size: 0.97rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .popup-center-outer {
+        padding-left: 4vw;
+        padding-right: 4vw;
+    }
+
+    .popup-content {
+        max-width: 98vw;
+    }
+}
+
+@media (max-width: 500px) {
+    .popup-content {
+        max-width: 98vw;
+        padding: 26px 12px 26px 12px;
+        font-size: 0.97rem;
+        /* Add a bit more right padding for scrollbar gap on mobile */
+        padding-right: 16px;
+    }
+}

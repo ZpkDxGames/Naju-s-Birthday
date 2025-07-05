@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊</title>
+    <link rel="stylesheet" href="../assets/css/stats.css">
+</head>
+
+<body>
+  <div class="background">
+    <div class="stats-back-container">
+        <a class="back-btn" href="../index.html">↩ Voltar</a>
+    </div>
+    <div class="stats-header">
+        <h1>📊 Estatísticas de Amizade</h1>
+    </div>
+
+    <div class="stats-outer-container">
+        <section class="stats-container">
+            <div class="stat-card">
+                <h2>Nível de Amor</h2>
+                <div class="bar">
+                    <div class="bar-fill" style="--width: 100%;">♾️% </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <h2>Nível de Surto</h2>
+                <div class="bar">
+                    <div class="bar-fill" style="--width: 100%;">101% </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <h2>Nível de Compaixão</h2>
+                <div class="bar">
+                    <div class="bar-fill" style="--width: 100%;">100% </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <h2>Nível de Suporte</h2>
+                <div class="bar">
+                    <div class="bar-fill" style="--width: 95%;">95%</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <h2>Cuidado pelo Outro</h2>
+                <div class="bar">
+                    <div class="bar-fill" style="--width: 85%;">90%</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <h2>Responsabilidade em Conjunto</h2>
+                <div class="bar">
+                    <div class="bar-fill" style="--width: 77%;">77%</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <h2>Ódio mútuo pelo outro</h2>
+                <div class="bar">
+                    <div class="bar-fill" style="--width: 5%;"> 0%</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que nos humilhamos:</h2>
+                <div class="stat-value" id="humilhados">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que surtamos:</h2>
+                <div class="stat-value" id="surtos">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que nos xingamos:</h2>
+                <div class="stat-value" id="xingamos">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que falamos mal de alguém:</h2>
+                <div class="stat-value" id="mal-de-alguem">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que fizemos besteira:</h2>
+                <div class="stat-value" id="fizemos-besteira">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que fomos salvos de uma besteira:</h2>
+                <div class="stat-value" id="salvos-de-besteira">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que foram ditas "Bate, a cara é essa":</h2>
+                <div class="stat-value" id="bate">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que fofocamos:</h2>
+                <div class="stat-value" id="fofoca">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que demos dedada um no outro 👉🏻:</h2>
+                <div class="stat-value" id="dedada">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que mandamos alguém se matar:</h2>
+                <div class="stat-value" id="mandar-se-matar">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que nos consolamos:</h2>
+                <div class="stat-value" id="consolo">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que desabafamos:</h2>
+                <div class="stat-value" id="desabafo">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que nos abraçamos:</h2>
+                <div class="stat-value" id="abraços">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que fomos na casa do outro:</h2>
+                <div class="stat-value" id="casa">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que choramos na frente do outro:</h2>
+                <div class="stat-value" id="choro">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Vezes que queriamos o mal do outro:</h2>
+                <div class="stat-value" id="mal-do-outro">0</div>
+            </div>
+            <div class="stat-card">
+                <h2>Dias desde que nos conhecemos:</h2>
+                <div class="stat-value-dias" id="dias">0</div>
+            </div>
+        </section>
+    </div>
+    <footer class="stats-footer">
+        <span>Alguns valores são genuínos, ta? 🥺</span>
+    </footer>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="../assets/js/stats.js"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Background */
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  color:black;
+  overflow: hidden;
+  background: none !important;
+}
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('../img/index-page-background.webp') no-repeat center center fixed;
+  background-size: cover;
+  z-index: -1;
+}
+
+
+/* Center Gift Button */
+main {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#giftButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  animation: bounce 2s infinite;
+}
+
+#giftButton img {
+  width: 80px;
+  transition: transform 0.3s;
+}
+
+#giftButton:hover img {
+  transform: scale(1.1);
+}
+
+/* Popup */
+#popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(30, 30, 30, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hidden {
+  display: none !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.popup-container {
+  background: rgba(8, 0, 0, 0.97);
+  padding: 40px 32px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.5s ease forwards;
+  max-width: 350px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  font-family: 'Pacifico', cursive;
+  color: rgb(226, 226, 226);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  width: 100%;
+  align-items: center;
+}
+
+.popup-container h2 {
+  margin-bottom: 10px;
+}
+
+.options a {
+  display: inline-block;
+  margin: 10px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #720000;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+  color: rgb(226, 226, 226);
+}
+
+.options a:hover {
+  background-color: #ce0000;
+  transform: scale(1.08);
+}
+
+#popup {
+  transition: opacity 0.3s ease;
+}
+
+#popup.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Fonts Imported */
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap');
+
+/* Animations */
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
