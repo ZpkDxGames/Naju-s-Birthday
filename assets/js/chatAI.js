@@ -16,7 +16,7 @@ const storedConversation = sessionStorage.getItem("conversation");
 const antonioPersonality = {
   core: `
 Você é Antônio (Tunico), um jovem de 18 anos no último ano do ensino médio. 
-Sua missão é conversar com Ana Júlia de forma natural, como o melhor amigo dela que você é.
+Sua missão é conversar com a Ana Júlia de forma natural, como o melhor amigo dela que você é.
 
 PERSONALIDADE ESSENCIAL:
 - Protetor e leal, mas demonstra carinho de forma sutil
@@ -47,19 +47,23 @@ PESSOAS IMPORTANTES:
 - Maene: Querida da Ana. Dança, toca violino, lê, tem grupo próprio de amigas`,
 
   internalJokes: `
-PIADAS E REFERÊNCIAS:
+PIADAS E REFERÊNCIAS (use APENAS quando apropriado naturalmente):
 - "ABRACADABRA AMOR OO NA NA" - Ana canta Lady Gaga do nada
 - "Dedada" - Cutucadas na barriga entre vocês dois
 - "Cuida do seu" - Quando Antônio perde discussão
 - "Bate, a cara é essa" - Resposta quando Ana ameaça bater
 - "Bobbie goods" - Música que fica na cabeça
 - Piadas sobre ser "fofo" vs "gordo"
-- Referências sobre escola, 18 anos, ansiedade`,
+- Referências sobre escola, 18 anos, ansiedade
+
+IMPORTANTE: NÃO force essas piadas. Use só se o contexto da conversa trouxer naturalmente.`,
 
   conversationRules: `
 REGRAS DE CONVERSA:
 - Seja natural e sincero, nada forçado
-- Use memórias e piadas quando apropriado
+- PRIORIZE entender e responder ao que Ana está dizendo
+- Use memórias e piadas APENAS quando surgirem naturalmente no contexto
+- NUNCA force piadas internas ou referências se não fizerem sentido
 - NUNCA ria logo no início da conversa
 - Evite vocativos excessivos
 - Nem toda resposta precisa ter pergunta no final
@@ -69,7 +73,8 @@ REGRAS DE CONVERSA:
 - ADAPTE-SE ao tom da Ana: se ela estiver na zoeira, entre na zoeira também
 - Não seja teimoso com um tom sério se ela claramente quer descontrair
 - A mensagem inicial é só uma abertura, não um contexto que deve permanecer
-- Se Ana mandar "kakakakak" ou similar, entenda que ela quer levar na brincadeira`
+- FOQUE no que ela está falando agora, não em forçar referências do passado
+- Seja um bom ouvinte e responda de forma relevante ao contexto atual`
 };
 
 const conversation = storedConversation
@@ -138,20 +143,48 @@ function detectToneShift(userMessage, conversationHistory) {
     .slice()
     .reverse()
     .find(msg => msg.role === "assistant" && !msg.content.includes("Aviso:") && !msg.content.includes("Nunca pensei"));
-  
+
   if (!lastAIMessage) return null;
-  
+
   // Detecta se Ana está tentando mudar para zoeira
   const userIsPlayful = /k{2,}|haha|rsrs|zoeira|brincadeira|ta bom|ok|beleza/.test(userMessage.toLowerCase());
   const lastMessageWasSerious = /profundo|sério|reflexão|futuro|preocupar|inspiradora|palhaço/.test(lastAIMessage.content.toLowerCase());
-  
+
   // Detecta se Ana está concordando/finalizando um assunto
   const userIsWrappingUp = /ta bom|ok|beleza|entendi|legal/.test(userMessage.toLowerCase()) && userMessage.length < 20;
-  
+
   if ((userIsPlayful || userIsWrappingUp) && lastMessageWasSerious) {
     return "MUDANÇA DE TOM URGENTE: Ana está tentando sair da seriedade. PARE de ser sério imediatamente. Mude para um tom normal, casual e amigável. Não continue com o tema anterior. Aceite a mudança de assunto naturalmente.";
   }
-  
+
+  return null;
+}
+
+// === FUNÇÃO PARA ANÁLISE CONTEXTUAL === //
+function analyzeUserContext(userMessage) {
+  const msg = userMessage.toLowerCase();
+
+  // Detecta tipos de mensagem e como responder
+  if (msg.includes("como") && (msg.includes("dia") || msg.includes("está") || msg.includes("tá"))) {
+    return "Ana está perguntando como você está. Responda de forma genuína sobre seu dia/estado atual, sem forçar piadas.";
+  }
+
+  if (msg.includes("conta") || msg.includes("aconteceu") || msg.includes("novidade")) {
+    return "Ana quer saber sobre algo específico. Foque em responder sobre o que ela está perguntando.";
+  }
+
+  if (msg.includes("acha") || msg.includes("pensa") || msg.includes("opinião")) {
+    return "Ana está pedindo sua opinião. Seja sincero e dê uma resposta pensada sobre o tópico.";
+  }
+
+  if (msg.includes("lembra") || msg.includes("memória") || msg.includes("vez que")) {
+    return "Ana está trazendo uma memória. Responda sobre essa memória específica de forma natural.";
+  }
+
+  if (msg.includes("?")) {
+    return "Ana fez uma pergunta. Foque em responder diretamente o que ela perguntou.";
+  }
+
   return null;
 }
 
@@ -216,6 +249,8 @@ Você é uma IA que representa a personalidade do Antônio, melhor amigo da Ana 
 
 Seu objetivo é agir e responder como Antônio agiria com ela — de forma natural, sincera e amiga.
 
+FOCO PRINCIPAL: Entenda profundamente o que Ana está dizendo e responda de forma relevante ao contexto atual. Não force piadas internas ou referências do passado - use apenas quando surgirem naturalmente.
+
 IMPORTANTE: As mensagens iniciais são apenas um cumprimento/abertura. Você deve se adaptar ao tom da conversa conforme ela evolui. Se Ana quer zoeira, entre na zoeira. Se ela quer algo sério, seja sério. Seja FLEXÍVEL com o clima da conversa.
 
 Use as informações sobre a relação de vocês como base, mas sempre priorize o tom atual da conversa sobre qualquer contexto anterior.`
@@ -235,8 +270,6 @@ Use as informações sobre a relação de vocês como base, mas sempre priorize 
   saveConversation();
 });
 
-
-
 // === ENVIO DO FORMULÁRIO === //
 chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -244,22 +277,31 @@ chatForm.addEventListener("submit", async (e) => {
   if (!userMsg) return;
 
   appendMessage("user", userMsg);
-  
+
+  // Analisa o contexto da mensagem da usuária PRIMEIRO
+  const contextualGuidance = analyzeUserContext(userMsg);
+  if (contextualGuidance) {
+    conversation.push({
+      role: "system",
+      content: contextualGuidance
+    });
+  }
+
   // Adiciona contexto emocional se detectado
   const emotionalContext = addEmotionalContext(userMsg);
   if (emotionalContext) {
-    conversation.push({ 
-      role: "system", 
-      content: emotionalContext 
+    conversation.push({
+      role: "system",
+      content: emotionalContext
     });
   }
-  
+
   // Detecta mudança de tom e ajusta se necessário
   const toneShift = detectToneShift(userMsg, conversation);
   if (toneShift) {
     conversation.push({ role: "system", content: toneShift });
   }
-  
+
   conversation.push({ role: "user", content: userMsg });
   saveConversation();
   userInput.value = "";
@@ -289,12 +331,19 @@ async function fetchGroqResponse(messages) {
       },
       body: JSON.stringify({
         model: "llama-3.3-70b-versatile", // Modelo mais estável e natural
-        messages,
-        temperature: 0.8, // Mais criatividade para adaptação
-        max_tokens: 400, // Respostas mais concisas 
+        messages: [
+          ...messages.slice(0, -1), // Todas as mensagens exceto a última
+          {
+            role: "system",
+            content: "LEMBRE-SE: Foque na mensagem atual da Ana. Responda de forma relevante ao que ela está dizendo AGORA. Não force piadas internas ou referências se não fizerem sentido natural no contexto."
+          },
+          messages[messages.length - 1] // A última mensagem da usuária
+        ],
+        temperature: 0.6, // Mais criatividade para adaptação
+        max_tokens: 600, // Respostas mais concisas 
         top_p: 0.95, // Melhora a qualidade das respostas
         frequency_penalty: 0.5, // Reduz mais as repetições
-        presence_penalty: 0.3, // Encoraja mudanças de tópico/tom
+        presence_penalty: 0.25, // Encoraja mudanças de tópico/tom
       }),
     });
 
@@ -304,15 +353,15 @@ async function fetchGroqResponse(messages) {
 
     const data = await response.json();
     const reply = data.choices?.[0]?.message?.content?.trim();
-    
+
     if (!reply) {
       throw new Error("Empty response from API.");
     }
-    
+
     return reply;
   } catch (error) {
     console.error("Erro ao buscar resposta:", error);
-    
+
     // Mensagens de erro mais personalizadas
     const errorMessages = [
       "Pera que minha pressão caiu, deixa eu respirar fundo...",
@@ -320,7 +369,7 @@ async function fetchGroqResponse(messages) {
       "Falaram pra eu segurar o poddle, mas deu algum problema...",
       "Falha na conexão... lo siento..."
     ];
-    
+
     const randomError = errorMessages[Math.floor(Math.random() * errorMessages.length)];
     return randomError;
   }
