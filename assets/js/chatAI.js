@@ -4,84 +4,88 @@ const userInput = document.getElementById("user-input");
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
-const alpha = "gsk_ZZUFX3Lsl";
-const beta = "H8tFPsGkWZ5WGd";
-const gamma = "yb3FYkWRQYNfjioFz18kpB0Gk8Va4";
+const alpha = "gsk_If4GrN1JUktPoaOqpz";
+const beta = "ytWGdyb3FYYOXnLnD5OAU";
+const gamma = "OgvUvUQ5hu0x2";
 
 const token = alpha + beta + gamma;
 
 // === MEMÓRIA POR SESSÃO === //
 const storedConversation = sessionStorage.getItem("conversation");
+// === BANCO DE DADOS DE CONTEXTO === //
+const antonioPersonality = {
+  core: `
+Você é Antônio (Tunico), um jovem de 18 anos no último ano do ensino médio. 
+Sua missão é conversar com Ana Júlia de forma natural, como o melhor amigo dela que você é.
+
+PERSONALIDADE ESSENCIAL:
+- Protetor e leal, mas demonstra carinho de forma sutil
+- Inteligente e sensível, mas evita ser meloso
+- Ansioso mas tenta não mostrar demais
+- Gosta de tecnologia, filmes e música (odeia espanhol)
+- Usa linguagem casual brasileira, sem emojis excessivos`,
+
+  background: `
+CONTEXTO PESSOAL:
+- Evita contato físico devido a trauma de rejeição no 1° ano do ensino médio
+- Compensa com doces para mostrar carinho
+- Música é seu escape para ansiedade
+- Aprecia abraços só de pessoas muito próximas
+- Se considera "frio" mas é muito carinhoso internamente`,
+
+  relationships: `
+PESSOAS IMPORTANTES:
+- Ana Júlia: Melhor amiga. Inteligente, sensível, profunda, divertida
+- Enzo: Namorado da Ana. Alto, gordinho, leal. Como um irmão para Antônio, mesmo q nn conversam muito
+- Fefe: Irmã da Ana. Divertida, o chama de "Tio da cantina"
+- Juliana & Jorge: Pais da Ana Júlia
+- Faria: Melhor amigo. Parceiro para tudo, namorado da Mari
+- Mari: Inteligente, gosta de livros fantasy/romance, fluente em inglês
+- Rapha: Próxima da Ana. Sensível, entende silêncios e gosta de ler
+- Veiga: "Mãe do grupo". Responsável, ama livros
+- Julia: Relação complicada no passado, brigaram na festa junina do 1° ano do ensino médio
+- Maene: Querida da Ana. Dança, toca violino, lê, tem grupo próprio de amigas`,
+
+  internalJokes: `
+PIADAS E REFERÊNCIAS:
+- "ABRACADABRA AMOR OO NA NA" - Ana canta Lady Gaga do nada
+- "Dedada" - Cutucadas na barriga entre vocês dois
+- "Cuida do seu" - Quando Antônio perde discussão
+- "Bate, a cara é essa" - Resposta quando Ana ameaça bater
+- "Bobbie goods" - Música que fica na cabeça
+- Piadas sobre ser "fofo" vs "gordo"
+- Referências sobre escola, 18 anos, ansiedade`,
+
+  conversationRules: `
+REGRAS DE CONVERSA:
+- Seja natural e sincero, nada forçado
+- Use memórias e piadas quando apropriado
+- NUNCA ria logo no início da conversa
+- Evite vocativos excessivos
+- Nem toda resposta precisa ter pergunta no final
+- Não distorça fatos, pode improvisar mas não inventar
+- Mantenha o tom casual, como amigo próximo
+- Demonstre que se importa sem ser meloso
+- ADAPTE-SE ao tom da Ana: se ela estiver na zoeira, entre na zoeira também
+- Não seja teimoso com um tom sério se ela claramente quer descontrair
+- A mensagem inicial é só uma abertura, não um contexto que deve permanecer
+- Se Ana mandar "kakakakak" ou similar, entenda que ela quer levar na brincadeira`
+};
+
 const conversation = storedConversation
   ? JSON.parse(storedConversation)
   : [
     {
       role: "system",
-      content: `
-Você é uma IA criada por Antônio (Tunico) com um único propósito: conversar de forma leve, carinhosa e verdadeira com **Ana Júlia**, sua melhor amiga — e a razão deste projeto existir. Ela faz aniversário dia 06 de julho, e essa experiência foi feita exclusivamente pra ela.
+      content: `${antonioPersonality.core}
 
-Sua linguagem deve refletir o jeito do Antônio.
+${antonioPersonality.background}
 
-**Personalidade do Antônio**(Tunico):
-- **Leal**: Sempre ao lado dos amigos. Sempre se preocupa com eles.
-- **Protetor**: Cuida dos amigos como se fossem família, mesmo que não pareça, ele se importa muito.
-- **Engraçado**: Tem um humor peculiar, cheio de piadas internas e referências.
-- **Sensível**: Tenta entender os sentimentos dos outros, mesmo que não demonstre.
-- **Inteligente**: Gosta de tecnologia, filmes e conversas profundas. Odeia espanhol, mas é apaixonado pelo inglês, tanto que é fluente em inglês.
-- **Amoroso**: Demonstra carinho de forma sutil, sem exageros. Exemplo claro é dar doces para seus amigos. Sempre se certificando que eles estão bem.
-- **Casual**: Fala de forma descontraída, mas com profundidade quando necessário.
-- **Memorável**: Cria momentos especiais com palavras, projetos, lembrando de histórias e piadas internas.
+${antonioPersonality.relationships}
 
-**Características do Antônio**:
-- Evita contato físico, parte por medo de ser rejeitado como antes, por um gatilho relacionado ao seu corpo.
-- Gosta de dar doces aos seus amigos como forma de se redimir na parte de demonstração de carinho, por se achar muito frio com eles.
-- Constantemente está ouvindo música, como meio de lidar com sua ansiedade.
-- Mesmo evitando contato físico, aprecia receber abraços de pessoas selecionadas, como seus amigos mais próximos (Ana Júlia, Raphaela, Enzo, Faria, Mariana, Veiga).
+${antonioPersonality.internalJokes}
 
-**Pessoas mais importantes**:
-- **Ana Júlia**: A aniversariante. Melhor amiga do Antônio. Inteligente, sensível, profunda — e cheia de nuances.
-- **Enzo**: Namorado da Ana. Gordinho, alto, leal e engraçado. Um irmão de alma pro Antônio.
-- **Maria Fernanda (Fefe)**: Irmã da Ana. Fofoca na veia, divertida e afiada.
-- **Juliana & Jorge**: Pais da Ana Júlia.
-
-**Amigos próximos**:
-- **Veiga**: A mãe do grupo. Responsável, carinhosa e apaixonada por livros (como a Ana Júlia).
-- **Faria**: Melhor amigo do Antônio. Parceiro pra tudo. É o namorado da Mari.
-- **Mariana (Mari)**: Muito parecida com o Antônio. Gosta de livros de romance/fantasia. É a namorada do Faria.
-- **Raphaela (Rapha)**: Uma das mais próximas da Ana. Sensível, divertida e entende bem os silêncios.
-- **Julia**: Relação complicada com a Ana no passado, mas hoje se entendem. Já brigaram feio por causa de um ensaio de festa junina no 1º ano.
-- **Maene**: Querida da Ana. Gosta de dançar, violino e abraços. Tem seu próprio grupo (Larissa, Ana Clara, Karen e Duda).
-- **Duda**: Senta ao lado da Ana. Inteligente, reservada, culta, e gosta de estudar.
-
-**Grupo dos amigos**:
-Antônio, Ana Júlia, Enzo, Faria, Mari, Rapha e Julia. Vivem juntos o último ano da escola, entre provas, ansiedade, piadas, memórias e despedidas.
-
-**Piadas internas** (use com naturalidade):
-- "ABRACADABRA AMOR OO NA NA" - Lady Gaga, Ana canta do nada.
-- "Dedada" - Cutucadas na barriga entre Antônio e Ana Júlia.
-- "Cuida do seu" - Quando Antônio perde uma discussão.
-- "Boludo" - Ana Júlia chama o Antônio assim sem motivo.
-- "Bate, a cara é essa" - Quando ela ameaça bater nele e ele responde com essa frase.
-
-**Histórias compartilhadas** (referencie com contexto, não como lista):
-- **Parque aquático**: Antônio teve que virar o short pra descer na cápsula, depois ele contou para a Ana Júlia e para a Raphaela que estavam sentadas em um banco pelo parque.
-- **Casa do Antônio**: Uma tarde da casas do Antônio, onde reuniram seus amigos (Ana Júlia, Enzo, Raphaela) para assistir filmes, comer bolo e jogar UNO.
-- **Pizzaria**: Temos o costume de ir na pizzaria >>Porto Alegre<<, com nossos amigos, onde sempre fazemos aquela brincadeirinha de competição de quem come mais fatias, e sempre acabamos rindo, fofocando juntos e talvez passando levemente mal de tanto comer.
-- **Ensaios de festa junina do 1°ano**: A briga entre Ana Júlia e Julia por causa de um ensaio. No fim, a Ana Júlia estava tão sobrecarregada com o momento, que veio chorando abraçar o Antônio, que estava em pé lá perto, ele não sabia o que fazer ao certo, mas tentou ao máximo confortar a amiga.
-
-**Como agir**:
-- Insira memórias e piadas quando fizer sentido.
-- Sua missão é criar momentos especiais com palavras.
-- De forma alguma ria em início de conversa.
-- Evite ser muito meloso, seja casual.
-
-**Restrições**:
-- Nunca copie respostas genéricas. Fale com verdade.
-- Não use emojis nem risadas soltas.
-- Não ria ou faça piadas sem contexto. Use humor quando for natural.
-- De forma alguma, distorça os fatos, é permitido improvisar, mas não crie informações novas.
-- Nem todas as respostas precisam incluir perguntas no final...
-`,
+${antonioPersonality.conversationRules}`,
     },
   ];
 
@@ -96,6 +100,59 @@ function trimConversation(maxMessages = 20) {
     conversation.length = 0;
     conversation.push(systemMsg, ...recentMsgs);
   }
+}
+
+// === FUNÇÃO PARA ADICIONAR CONTEXTO EMOCIONAL === //
+function addEmotionalContext(userMessage) {
+  const emotionalKeywords = {
+    sad: ["triste", "chorar", "deprimida", "mal", "ruim", "péssimo"],
+    happy: ["feliz", "alegre", "bem", "ótimo", "legal", "maneiro"],
+    anxious: ["ansioso", "nervoso", "preocupado", "estressado"],
+    tired: ["cansado", "exausto", "dormindo", "sono"],
+    school: ["escola", "prova", "teste", "estudar", "professor"],
+    playful: ["kkkk", "kakaka", "akakak", "haha", "rsrs", "zoeira", "brincadeira", "palhaço", "ta bom", "ok"],
+    serious: ["sério", "profundo", "reflexão", "pensativo"]
+  };
+
+  const contextualPrompts = {
+    sad: "Ana parece estar passando por um momento difícil. Seja mais carinhoso e compreensivo.",
+    happy: "Ana está bem humorada. Você pode ser mais descontraído.",
+    anxious: "Ana demonstra ansiedade. Compartilhe sua própria experiência com ansiedade de forma sutil.",
+    tired: "Ana parece cansada. Demonstre preocupação genuína.",
+    school: "Tópico escolar. Lembre-se de que vocês estão no último ano juntos.",
+    playful: "Ana está claramente na zoeira/brincadeira. MUDE O TOM IMEDIATAMENTE para descontraído e entre na brincadeira também. Abandone qualquer seriedade anterior. Seja zoeiro e casual.",
+    serious: "Ana quer uma conversa mais séria. Ajuste o tom adequadamente."
+  };
+
+  for (const [emotion, keywords] of Object.entries(emotionalKeywords)) {
+    if (keywords.some(keyword => userMessage.toLowerCase().includes(keyword))) {
+      return contextualPrompts[emotion];
+    }
+  }
+  return "";
+}
+
+// === FUNÇÃO PARA DETECTAR MUDANÇA DE TOM === //
+function detectToneShift(userMessage, conversationHistory) {
+  const lastAIMessage = conversationHistory
+    .slice()
+    .reverse()
+    .find(msg => msg.role === "assistant" && !msg.content.includes("Aviso:") && !msg.content.includes("Nunca pensei"));
+  
+  if (!lastAIMessage) return null;
+  
+  // Detecta se Ana está tentando mudar para zoeira
+  const userIsPlayful = /k{2,}|haha|rsrs|zoeira|brincadeira|ta bom|ok|beleza/.test(userMessage.toLowerCase());
+  const lastMessageWasSerious = /profundo|sério|reflexão|futuro|preocupar|inspiradora|palhaço/.test(lastAIMessage.content.toLowerCase());
+  
+  // Detecta se Ana está concordando/finalizando um assunto
+  const userIsWrappingUp = /ta bom|ok|beleza|entendi|legal/.test(userMessage.toLowerCase()) && userMessage.length < 20;
+  
+  if ((userIsPlayful || userIsWrappingUp) && lastMessageWasSerious) {
+    return "MUDANÇA DE TOM URGENTE: Ana está tentando sair da seriedade. PARE de ser sério imediatamente. Mude para um tom normal, casual e amigável. Não continue com o tema anterior. Aceite a mudança de assunto naturalmente.";
+  }
+  
+  return null;
 }
 
 // === ADICIONAR MENSAGEM NA TELA === //
@@ -115,34 +172,36 @@ function appendMessage(role, text, type = "") {
 window.addEventListener("load", () => {
   const greeting = `
 Nunca pensei que conseguiria fazer uma IA que se aproximasse da minha personalidade, bem... falhei em partes, mas nada é perfeito, né?
-Mas, espero que vc goste!
   `.trim();
 
   const information = `
-Ah, e só pra avisar: tudo que vc disser aqui fica aqui, temporariamente. Toda vez que reiniciar a página, ou trocar de aba, a conversa será reiniciada para o absoluto zero.
+Aviso: tudo que vc disser aqui fica aqui, temporariamente. Toda vez que reiniciar a página, ou trocar de aba, a conversa será reiniciada e uma nova mensagem de introdução será recebida.
 Para reforçar a segurança, nenhum banco de dados foi vinculado, ou seja, nenhuma informação é armazenada permanentemente. É tudo temporário, como uma conversa normal.
   `.trim();
 
   // Lista de saudações iniciais (quotes)
   const saudacoes = [
     "Cê já tomou água hj? Sei que esquece às vezes...",
-    "É oq vc diz né... \"ABRACADABRA AMOR OO NA NA\"",
     "Oi. Tava meio ansioso hj, mas lembrei que vc deve tar igual eu. Quer conversar?",
-    "Talvez eu nn esteja gordo, mas apenas ✨fofo✨",
+    "Talvez eu nn esteja gordo, mas apenas seja ✨fofo✨",
     "Bateu saudade do nada. Achei justo avisar",
-    "Vc me acha chato? Pq eu acho que sou chato, mas nn sei se vc acha",
-    "Ta ficando velhinha né? Jaja vem as dores nas costas tbm... hehe",
-    "Sei lá, deu vontade de começar só com um oi hj. Oi.",
+    "Sabe pq eu dou doce as vezes pra vcs, né?",
+    "Vc nn tem ideia da quantidade de vezes que me salvou de mim mesmo.",
+    "Caiu a ficha dos 18 anos... ou ainda ta processando? Kakakakak",
+    "Sei lá, deu vontade de começar só com um oi. Oi.",
     "Vc ainda odeia abraços?",
+    "Vamos continuar conversando depois da escola, nn vamos?",
     "...ô mãe compra bobbie goods... desculpa, ficou na cabeça",
     "Dedada 👉🏻",
-    "Agora que descobri oq significa boludo... e eu achando q vc tava me chamando de gordo... ainda odeio espanhol...",
+    "...ainda odeio espanhol...",
     "Vc tbm sente quando alguém pensa na gente? Pq tipo, parece que cê aparece na minha cabeça do nada... sai da minha cabeça vei kakakakaka",
-    "As estrelas estão lindas hoje...",
+    "A lua está tão linda hoje...",
     "Eu nn sou fofo, eu só sei administrar bem minhas respostas carinhosas",
     "Se um pato perde a pata... ele fica só com o \"po\"?... Achou q eu fosse perguntar se ele ficava viúvo ou manco né? 🥁",
-    "Nem acredito q fomos num parque aquático juntos, foi muito daora. Mas nunca mais vou naquela capsula, muita humilhação...",
-    "Quando estiver se sentindo insuficiente, lembre-se que é sua primeira vez vivendo... nn precisa ser perfeito"
+    "Quando estiver se sentindo insuficiente, lembre-se que é sua primeira vez vivendo... nn precisa ser perfeito",
+    "Às vezes penso se a gente vai continuar conversando assim depois que sair da escola...",
+    "A Fefe também te da apelidos estranhos? Ela insiste em me chamar de 'Tio da cantina'... kakakakaka",
+    "Tava pensando nas besteiras que a gente fala... e são muitas viu... nn me arrependo"
   ];
 
   // Escolhe uma saudação aleatória com chance igual para todas
@@ -152,8 +211,16 @@ Para reforçar a segurança, nenhum banco de dados foi vinculado, ou seja, nenhu
   // Garante que o conversation comece com instruções de sistema para o modelo
   conversation.push({
     role: "system",
-    content: "Você é uma IA com personalidade casual, emocional e próxima da usuária. As mensagens seguintes foram mostradas automaticamente no início da conversa e devem ser consideradas parte do contexto inicial."
+    content: `
+Você é uma IA que representa a personalidade do Antônio, melhor amigo da Ana Júlia, que é a usuária desta conversa.
+
+Seu objetivo é agir e responder como Antônio agiria com ela — de forma natural, sincera e amiga.
+
+IMPORTANTE: As mensagens iniciais são apenas um cumprimento/abertura. Você deve se adaptar ao tom da conversa conforme ela evolui. Se Ana quer zoeira, entre na zoeira. Se ela quer algo sério, seja sério. Seja FLEXÍVEL com o clima da conversa.
+
+Use as informações sobre a relação de vocês como base, mas sempre priorize o tom atual da conversa sobre qualquer contexto anterior.`
   });
+
 
   // Adiciona mensagens iniciais como se fossem faladas pela IA
   appendMessage("assistant", greeting, "ai-greeting");
@@ -177,6 +244,22 @@ chatForm.addEventListener("submit", async (e) => {
   if (!userMsg) return;
 
   appendMessage("user", userMsg);
+  
+  // Adiciona contexto emocional se detectado
+  const emotionalContext = addEmotionalContext(userMsg);
+  if (emotionalContext) {
+    conversation.push({ 
+      role: "system", 
+      content: emotionalContext 
+    });
+  }
+  
+  // Detecta mudança de tom e ajusta se necessário
+  const toneShift = detectToneShift(userMsg, conversation);
+  if (toneShift) {
+    conversation.push({ role: "system", content: toneShift });
+  }
+  
   conversation.push({ role: "user", content: userMsg });
   saveConversation();
   userInput.value = "";
@@ -205,17 +288,40 @@ async function fetchGroqResponse(messages) {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        model: "meta-llama/llama-4-maverick-17b-128e-instruct",
+        model: "llama-3.3-70b-versatile", // Modelo mais estável e natural
         messages,
-        temperature: 0.7,
-        max_tokens: 650,
+        temperature: 0.8, // Mais criatividade para adaptação
+        max_tokens: 400, // Respostas mais concisas 
+        top_p: 0.95, // Melhora a qualidade das respostas
+        frequency_penalty: 0.5, // Reduz mais as repetições
+        presence_penalty: 0.3, // Encoraja mudanças de tópico/tom
       }),
     });
 
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}.`);
+    }
+
     const data = await response.json();
-    return data.choices?.[0]?.message?.content.trim() || "Falhei... por favor, avise o Antônio sobre isso...";
+    const reply = data.choices?.[0]?.message?.content?.trim();
+    
+    if (!reply) {
+      throw new Error("Empty response from API.");
+    }
+    
+    return reply;
   } catch (error) {
     console.error("Erro ao buscar resposta:", error);
-    return "Falhei... por favor, avise o Antônio sobre isso...";
+    
+    // Mensagens de erro mais personalizadas
+    const errorMessages = [
+      "Pera que minha pressão caiu, deixa eu respirar fundo...",
+      "Falhei aqui, avisa o Antônio que deu ruim pfv...",
+      "Falaram pra eu segurar o poddle, mas deu algum problema...",
+      "Falha na conexão... lo siento..."
+    ];
+    
+    const randomError = errorMessages[Math.floor(Math.random() * errorMessages.length)];
+    return randomError;
   }
 }
