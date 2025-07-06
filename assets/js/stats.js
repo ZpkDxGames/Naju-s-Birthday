@@ -73,7 +73,7 @@ setupStatAnimation("mandar-se-matar", 12640);
 setupStatAnimation("consolo", 2523);
 setupStatAnimation("desabafo", 1075);
 setupStatAnimation("abraços", 35);
-setupStatAnimation("casa", 6);
+setupStatAnimation("casa", 7);
 setupStatAnimation("choro", 4);
 setupStatAnimation("mal-do-outro", 0);
 setupStatAnimation("dias", calculateDaysSince("2018-06-04"));
