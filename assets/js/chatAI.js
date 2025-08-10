@@ -4,9 +4,9 @@ const userInput = document.getElementById("user-input");
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
-const alpha = "gsk_If4GrN1JUktPoaOqpz";
-const beta = "ytWGdyb3FYYOXnLnD5OAU";
-const gamma = "OgvUvUQ5hu0x2";
+const alpha = "gsk_qYOYzmU7gBVzzH";
+const beta = "PvQxEiWGdyb3FYMXzxtr";
+const gamma = "GlMq5Aww6w6kp7X3JY";
 
 const token = alpha + beta + gamma;
 
@@ -374,3 +374,4 @@ async function fetchGroqResponse(messages) {
     return randomError;
   }
 }
+
