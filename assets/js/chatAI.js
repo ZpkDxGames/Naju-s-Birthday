@@ -341,6 +341,7 @@ Para reforçar a segurança, nenhum banco de dados foi vinculado, ou seja, nenhu
   const saudacoes = [
     "Cê já tomou água hj? Sei que esquece às vezes... Eu me preocupo, sabe?",
     "Talvez eu nn esteja gordo, mas apenas seja ✨fofo✨",
+    "Vou sentir saudade de ver nossos amigos juntos na escola... definitivamente nn vou sentir falta das aulas do Fefel.",
     "Bateu saudade do nada. Achei justo avisar... Vc faz falta quando nn conversamos.",
     "Sabe por que eu dou doce às vezes pra vocês, né?",
     "Vc nn tem ideia da quantidade de vezes que me salvou de mim mesmo sem nem saber.",
@@ -357,9 +358,9 @@ Para reforçar a segurança, nenhum banco de dados foi vinculado, ou seja, nenhu
     "Quando se sentir insuficiente, lembre-se: é sua primeira vez vivendo. Vc tá indo bem.",
     "A Fefe tbm te dá apelidos estranhos? Pelo menos 'Tio da cantina' é carinhoso, né?",
     "Tava pensando nas besteiras que falamos... São muitas, mas são nossas. E são especiais.",
-    "Se vv estiver se sentindo sozinha hoje, lembra que tem alguém aqui pensando em vc.",
+    "Se vc estiver se sentindo sozinha hoje, lembra que tem alguém aqui pensando em vc.",
     "Música tá sendo minha salvação ultimamente... e vc? Como tá lidando com tudo?",
-    "Não sei se já disse hoje, mas vc é uma das pessoas mais importantes pra mim.",
+    "Nn sei se já disse hoje, mas vc é uma das pessoas mais importantes pra mim.",
     "Tô aqui se precisar desabafar, reclamar, ou só conversar besteira mesmo."
   ];
 
@@ -564,3 +565,4 @@ async function fetchGroqResponse(messages) {
     return randomError;
   }
 }
+
